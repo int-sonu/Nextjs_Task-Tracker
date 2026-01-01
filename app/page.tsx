@@ -6,20 +6,10 @@ export const metadata = {
 };
 
 async function getTask() {
-  const baseurl = process.env.BASE_URL || "http://localhost:3000";
-
-  const res = await fetch(`${baseurl}/api/tasks`, {
-    cache: "no-store",
-  });
-
-  if (!res.ok) {
-    const errorText = await res.text();
-    console.error("API Error:", errorText);
-    return [];
+    const baseurl=process.env.BASE_URL ||"http://localhost:3000"
+    const res=await fetch(`${baseurl}/api/tasks`,{cache:'no-store'})
+    return res.json()
   }
-
-  return res.json();
-}
 
 export default async function Home() {
   const tasks = await getTask();

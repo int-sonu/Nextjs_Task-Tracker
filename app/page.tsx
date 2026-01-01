@@ -4,12 +4,21 @@ export const metadata = {
   title: "Home | Task Tracker",
   description: "View and manage tasks",
 };
-
 async function getTask() {
-    const baseurl=process.env.BASE_URL ||"http://localhost:3000"
-    const res=await fetch(`${baseurl}/api/tasks`,{cache:'no-store'})
-    return res.json()
+  const baseUrl =
+    process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000";
+
+  const res = await fetch(`${baseUrl}/api/tasks`, {
+    cache: "no-store",
+  });
+
+  if (!res.ok) {
+    throw new Error("Failed to fetch tasks");
   }
+
+  return res.json();
+}
+
 
 export default async function Home() {
   const tasks = await getTask();

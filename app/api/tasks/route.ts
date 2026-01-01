@@ -3,7 +3,6 @@ import task from "@/models/task"
 import { Task } from "@/Type/tasks"
 import { NextResponse } from "next/server"
 import { describe } from "node:test"
-// export let tasks:Task[]=[]
 
 export async function GET(){
     await connectDB()
@@ -18,3 +17,4 @@ export async function POST(req:Request) {
     })
     return NextResponse.json(newTask,{status:200})
 }
+

@@ -2,12 +2,16 @@ import Taskcard from "@/components/TaskCard";
 import { Task } from "@/Type/tasks";
 
 async function getTasks(): Promise<Task[]> {
-  const res = await fetch("/api/tasks", {
+  const baseUrl =
+    process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000";
+
+  const res = await fetch(`${baseUrl}/api/tasks`, {
     cache: "no-store",
   });
 
   if (!res.ok) {
-    throw new Error("Failed to fetch tasks");
+    console.error("Failed to fetch tasks");
+    return [];
   }
 
   return res.json();

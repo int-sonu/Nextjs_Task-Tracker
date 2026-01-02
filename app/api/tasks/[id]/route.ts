@@ -1,30 +1,50 @@
 import { NextResponse } from "next/server";
 import { connectDB } from "@/lib/db";
 import task from "@/models/task";
-export async function PUT(req: Request, context: any) {
-    await connectDB()
-    const { id } = await context.params
-    const { completed } = await req.json()
-    const update = await task.findByIdAndUpdate(
-        id,
-        { completed },
-        { new: true }
-    )
-    if (!update) return NextResponse.json({ error: "Task not found" }, { status: 404 })
-    return NextResponse.json(update)
-}
-export async function GET(req: Request, { params }: any) {
-    await connectDB();
-    const { id } = await params;
-    console.log("url:", id);
 
-    const task_new = await task.findById(id);
-    return NextResponse.json(task_new, { status: 200 });
+type Params = Promise<{ id: string }>;
+
+export async function PUT(
+  req: Request,
+  { params }: { params: Params }
+) {
+  await connectDB();
+
+  const { id } = await params; 
+  const { completed } = await req.json();
+
+  const updated = await task.findByIdAndUpdate(
+    id,
+    { completed },
+    { new: true }
+  );
+
+  if (!updated) {
+    return NextResponse.json(
+      { error: "Task not found" },
+      { status: 404 }
+    );
+  }
+
+  return NextResponse.json(updated);
 }
-export async function DELETE(req: Request, { params }: any) {
-    await connectDB()
-    const { id } = await params
-    const deletetask = await task.findByIdAndDelete(id)
-    if (!deletetask) return NextResponse.json({ error: "Task not found" }, { status: 404 })
-    return NextResponse.json({ message: "success fully deleted" }, { status: 200 })
+
+export async function DELETE(
+  req: Request,
+  { params }: { params: Params }
+) {
+  await connectDB();
+
+  const { id } = await params; 
+
+  const deleted = await task.findByIdAndDelete(id);
+
+  if (!deleted) {
+    return NextResponse.json(
+      { error: "Task not found" },
+      { status: 404 }
+    );
+  }
+
+  return NextResponse.json({ message: "Deleted successfully" });
 }

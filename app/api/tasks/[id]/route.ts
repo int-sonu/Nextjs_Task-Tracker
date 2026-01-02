@@ -10,7 +10,7 @@ export async function PUT(
 ) {
   await connectDB();
 
-  const { id } = await params;
+  const { id } = await params; 
   const { completed } = await req.json();
 
   const updated = await task.findByIdAndUpdate(
@@ -35,7 +35,7 @@ export async function DELETE(
 ) {
   await connectDB();
 
-  const { id } = await params;
+  const { id } = await params; 
 
   const deleted = await task.findByIdAndDelete(id);
 

@@ -9,12 +9,24 @@ export async function GET(){
     const tasks=await task.find()
     return NextResponse.json(tasks)
 }
-export async function POST(req:Request) {
-    const data=await req.json()
-    const newTask=await task.create({
-        title: data.title,
-        completed:false
-    })
-    return NextResponse.json(newTask,{status:200})
+
+export async function POST(req: Request) {
+  await connectDB(); 
+
+  const data = await req.json();
+
+  if (!data.title) {
+    return NextResponse.json(
+      { error: "Title is required" },
+      { status: 400 }
+    );
+  }
+
+  const newTask = await task.create({
+    title: data.title,
+    completed: false,
+  });
+
+  return NextResponse.json(newTask, { status: 201 });
 }
 

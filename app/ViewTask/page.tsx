@@ -1,26 +1,22 @@
 import Taskcard from "@/components/TaskCard";
-import { connectDB } from "@/lib/db";
-import TaskModel from "@/models/task";
 
 async function getTasks() {
-  await connectDB();
+  const res = await fetch("/api/tasks", {
+    cache: "no-store",
+  });
 
-  const tasks = await TaskModel.find().lean();
+  if (!res.ok) {
+    throw new Error("Failed to fetch tasks");
+  }
 
-  return tasks.map((task) => ({
-    _id: task._id.toString(),  
-    title: task.title,
-    completed: task.completed,
-  }));
+  return res.json();
 }
 
 export default async function Home() {
   const tasks = await getTasks();
 
   return (
-    <main className="min-h-[calc(100vh-72px)] pt-20 px-4
-      bg-gradient-to-br from-blue-500 via-indigo-500 to-violet-600"
-    >
+    <main className="min-h-screen pt-20 px-4 bg-gradient-to-br from-blue-500 via-indigo-500 to-violet-600">
       <ul className="max-w-2xl mx-auto space-y-4">
         {tasks.length === 0 && (
           <p className="text-center text-white/80 text-lg">
@@ -28,7 +24,7 @@ export default async function Home() {
           </p>
         )}
 
-        {tasks.map((task) => (
+        {tasks.map((task: any) => (
           <Taskcard key={task._id} task={task} />
         ))}
       </ul>
